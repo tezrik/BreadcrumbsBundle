@@ -16,7 +16,7 @@ class HulutiBreadcrumbsExtension extends Extension
      * @param  ContainerBuilder $container
      * @return void
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $this->loadConfiguration($configs, $container);
 
@@ -30,7 +30,7 @@ class HulutiBreadcrumbsExtension extends Extension
      * @param array $configs
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */
-    protected function loadConfiguration(array $configs, ContainerBuilder $container)
+    protected function loadConfiguration(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
