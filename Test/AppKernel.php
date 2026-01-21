@@ -39,7 +39,7 @@ class AppKernel extends Kernel
         $this->addConfigFile(__DIR__.'/config.xml');
     }
 
-    public function addBundle($bundleClassName)
+    public function addBundle(string $bundleClassName): void
     {
         $this->bundlesToRegister[] = $bundleClassName;
     }
@@ -57,7 +57,7 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             $this->configFiles = array_unique($this->configFiles);
@@ -71,7 +71,7 @@ class AppKernel extends Kernel
     /**
      * @param string $configFile path to config file
      */
-    public function addConfigFile($configFile)
+    public function addConfigFile($configFile): void
     {
         $this->configFiles[] = $configFile;
     }
