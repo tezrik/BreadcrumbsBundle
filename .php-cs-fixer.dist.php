@@ -21,7 +21,7 @@ return (new Config())
             // 💡 additional files, eg bin entry file
             // ->append([__DIR__.'/bin-entry-file'])
             // 💡 folders to exclude, if any
-            // ->exclude([/* ... */])
+            ->exclude(['var', 'vendor'])
             // 💡 path patterns to exclude, if any
             // ->notPath([/* ... */])
             // 💡 extra configs
