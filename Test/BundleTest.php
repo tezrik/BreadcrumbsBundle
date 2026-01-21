@@ -1,9 +1,18 @@
 <?php
 
+use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
+use Huluti\BreadcrumbsBundle\Templating\Helper\BreadcrumbsHelper;
+use Huluti\BreadcrumbsBundle\Test\AppKernel;
+use Huluti\BreadcrumbsBundle\Twig\Extension\BreadcrumbsExtension;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class BundleTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class BundleTest extends WebTestCase
 {
     public function testInitBundle()
     {
@@ -15,7 +24,7 @@ class BundleTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         self::assertTrue($container->has('huluti_breadcrumbs.helper'));
 
         $service = $container->get('huluti_breadcrumbs.helper');
-        self::assertInstanceOf(\Huluti\BreadcrumbsBundle\Templating\Helper\BreadcrumbsHelper::class, $service);
+        self::assertInstanceOf(BreadcrumbsHelper::class, $service);
     }
 
     public function testRendering()
@@ -24,24 +33,24 @@ class BundleTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
         $container = $client->getContainer();
 
-        /** @var \Huluti\BreadcrumbsBundle\Model\Breadcrumbs $service */
-        $service = $this->getContainerForTests()->get(Huluti\BreadcrumbsBundle\Model\Breadcrumbs::class);
+        /** @var Breadcrumbs $service */
+        $service = $this->getContainerForTests()->get(Breadcrumbs::class);
         $service->addItem('foo');
 
-        /** @var \Huluti\BreadcrumbsBundle\Twig\Extension\BreadcrumbsExtension $breadcrumbsExtension */
+        /** @var BreadcrumbsExtension $breadcrumbsExtension */
         $breadcrumbsExtension = $container->get('huluti_breadcrumbs.twig');
 
         self::assertStringEqualsStringIgnoringLineEndings(
-<<<'EOD'
-    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                                    <span itemprop="name">foo</span>
-                                    <meta itemprop="position" content="1" />
+            <<<'EOD'
+                    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                                    <span itemprop="name">foo</span>
+                                                    <meta itemprop="position" content="1" />
 
-                            </li>
-            </ol>
+                                            </li>
+                            </ol>
 
-EOD,
+                EOD,
             $breadcrumbsExtension->renderBreadcrumbs()
         );
     }
@@ -52,26 +61,26 @@ EOD,
 
         $container = $client->getContainer();
 
-        /** @var \Huluti\BreadcrumbsBundle\Model\Breadcrumbs $service */
-        $service = $this->getContainerForTests()->get(Huluti\BreadcrumbsBundle\Model\Breadcrumbs::class);
+        /** @var Breadcrumbs $service */
+        $service = $this->getContainerForTests()->get(Breadcrumbs::class);
         $service->addItem('foo', '', ['name' => 'John']);
 
-        /** @var \Huluti\BreadcrumbsBundle\Twig\Extension\BreadcrumbsExtension $breadcrumbsExtension */
+        /** @var BreadcrumbsExtension $breadcrumbsExtension */
         $breadcrumbsExtension = $container->get('huluti_breadcrumbs.twig');
 
         self::assertStringEqualsStringIgnoringLineEndings(
-<<<'EOD'
-    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                                    <span itemprop="name">foo__{name:John}</span>
-                                    <meta itemprop="position" content="1" />
+            <<<'EOD'
+                    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                                    <span itemprop="name">foo__{name:John}</span>
+                                                    <meta itemprop="position" content="1" />
 
-                            </li>
-            </ol>
+                                            </li>
+                            </ol>
 
-EOD,
+                EOD,
             $breadcrumbsExtension->renderBreadcrumbs([
-                'viewTemplate' => '@HulutiBreadcrumbs/microdata.html.twig'
+                'viewTemplate' => '@HulutiBreadcrumbs/microdata.html.twig',
             ])
         );
     }
@@ -82,36 +91,41 @@ EOD,
 
         $container = $client->getContainer();
 
-        /** @var \Huluti\BreadcrumbsBundle\Model\Breadcrumbs $service */
-        $service = $this->getContainerForTests()->get(Huluti\BreadcrumbsBundle\Model\Breadcrumbs::class);
+        /** @var Breadcrumbs $service */
+        $service = $this->getContainerForTests()->get(Breadcrumbs::class);
         $service->addItem('foo');
         $service->addItem('bar', '', ['name' => 'John']);
 
-        /** @var \Huluti\BreadcrumbsBundle\Twig\Extension\BreadcrumbsExtension $breadcrumbsExtension */
+        /** @var BreadcrumbsExtension $breadcrumbsExtension */
         $breadcrumbsExtension = $container->get('huluti_breadcrumbs.twig');
 
         self::assertStringEqualsStringIgnoringLineEndings(
             <<<'EOD'
-    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                                    <span itemprop="name">foo__domain:admin</span>
-                                    <meta itemprop="position" content="1" />
+                    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                                    <span itemprop="name">foo__domain:admin</span>
+                                                    <meta itemprop="position" content="1" />
 
-                                    <span class='separator'>/</span>
-                            </li>
-                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                                    <span itemprop="name">bar__{name:John}__domain:admin</span>
-                                    <meta itemprop="position" content="2" />
+                                                    <span class='separator'>/</span>
+                                            </li>
+                                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                                    <span itemprop="name">bar__{name:John}__domain:admin</span>
+                                                    <meta itemprop="position" content="2" />
 
-                            </li>
-            </ol>
+                                            </li>
+                            </ol>
 
-EOD,
+                EOD,
             $breadcrumbsExtension->renderBreadcrumbs([
                 'viewTemplate' => '@HulutiBreadcrumbs/microdata.html.twig',
                 'translation_domain' => 'admin',
             ])
         );
+    }
+
+    public static function getKernelClass(): string
+    {
+        return AppKernel::class;
     }
 
     private function getContainerForTests(): ContainerInterface
@@ -121,10 +135,5 @@ EOD,
         }
 
         return static::$container;
-    }
-
-    public static function getKernelClass(): string
-    {
-        return \Huluti\BreadcrumbsBundle\Test\AppKernel::class;
     }
 }

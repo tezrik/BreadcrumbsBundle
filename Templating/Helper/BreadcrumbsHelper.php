@@ -2,8 +2,8 @@
 
 namespace Huluti\BreadcrumbsBundle\Templating\Helper;
 
-use Twig\Environment;
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
+use Twig\Environment;
 
 class BreadcrumbsHelper
 {
@@ -20,43 +20,41 @@ class BreadcrumbsHelper
     /**
      * @var array The default options load from config file
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
-     * @param \Twig\Environment $twig
-     * @param \Huluti\BreadcrumbsBundle\Model\Breadcrumbs $breadcrumbs
      * @param array $options The default options load from config file
      */
     public function __construct(Environment $twig, Breadcrumbs $breadcrumbs, array $options)
     {
-        $this->twig  = $twig;
+        $this->twig = $twig;
         $this->breadcrumbs = $breadcrumbs;
-        $this->options = array_merge($options, array(
+        $this->options = array_merge($options, [
             'namespace' => Breadcrumbs::DEFAULT_NAMESPACE, // inject default namespace to options
-        ));
+        ]);
     }
 
     /**
-     * Returns the HTML for the namespace breadcrumbs
+     * Returns the HTML for the namespace breadcrumbs.
      *
      * @param array $options The user-supplied options from the view
+     *
      * @return string A HTML string
      */
-    public function breadcrumbs(array $options = array())
+    public function breadcrumbs(array $options = [])
     {
         $options = $this->resolveOptions($options);
 
         // Assign namespace breadcrumbs
-        $options["breadcrumbs"] = $this->breadcrumbs->getNamespaceBreadcrumbs($options['namespace']);
+        $options['breadcrumbs'] = $this->breadcrumbs->getNamespaceBreadcrumbs($options['namespace']);
 
         return $this->twig->render(
-            $options["viewTemplate"],
+            $options['viewTemplate'],
             $options
         );
     }
 
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function getName()
@@ -66,12 +64,13 @@ class BreadcrumbsHelper
 
     /**
      * Merges user-supplied options from the view
-     * with base config values
+     * with base config values.
      *
      * @param array $options The user-supplied options from the view
+     *
      * @return array
      */
-    private function resolveOptions(array $options = array())
+    private function resolveOptions(array $options = [])
     {
         return array_merge($this->options, $options);
     }

@@ -18,5 +18,6 @@ return static function (ContainerConfigurator $container): void {
 
     $services
         ->set('translator', DummyTranslator::class)
-        ->public();
+        ->public()
+    ;
 };

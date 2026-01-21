@@ -1,16 +1,17 @@
 <?php
+
 namespace Huluti\BreadcrumbsBundle\Test;
 
+use Huluti\BreadcrumbsBundle\HulutiBreadcrumbsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Huluti\BreadcrumbsBundle\HulutiBreadcrumbsBundle;
 
 /**
  * Class AppKernel
- * It is needed to simulate an application to make some functional tests
+ * It is needed to simulate an application to make some functional tests.
  */
 class AppKernel extends Kernel
 {
@@ -54,9 +55,7 @@ class AppKernel extends Kernel
 
         return $bundles;
     }
-    /**
-     * {@inheritdoc}
-     */
+
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) use ($loader) {
@@ -68,6 +67,7 @@ class AppKernel extends Kernel
             $container->addObjectResource($this);
         });
     }
+
     /**
      * @param string $configFile path to config file
      */

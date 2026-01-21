@@ -6,11 +6,11 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
 {
-    const DEFAULT_NAMESPACE = "default";
+    public const DEFAULT_NAMESPACE = 'default';
 
-    private $breadcrumbs = array(
-        self::DEFAULT_NAMESPACE => array()
-    );
+    private $breadcrumbs = [
+        self::DEFAULT_NAMESPACE => [],
+    ];
 
     /**
      * @var RouterInterface
@@ -18,17 +18,22 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
     private $router;
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text      #TranslationKey
+     * @param mixed  $url
+     * @param mixed  $translate
      */
-    public function addItem($text, $url = "", array $translationParameters = array(), $translate = true)
+    public function addItem($text, $url = '', array $translationParameters = [], $translate = true)
     {
         return $this->addNamespaceItem(self::DEFAULT_NAMESPACE, $text, $url, $translationParameters, $translate);
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text      #TranslationKey
+     * @param mixed  $namespace
+     * @param mixed  $url
+     * @param mixed  $translate
      */
-    public function addNamespaceItem($namespace, $text, $url = "", array $translationParameters = array(), $translate = true)
+    public function addNamespaceItem($namespace, $text, $url = '', array $translationParameters = [], $translate = true)
     {
         $b = new SingleBreadcrumb($text, $url, $translationParameters, $translate);
         $this->breadcrumbs[$namespace][] = $b;
@@ -37,17 +42,22 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text      #TranslationKey
+     * @param mixed  $url
+     * @param mixed  $translate
      */
-    public function prependItem($text, $url = "", array $translationParameters = array(), $translate = true)
+    public function prependItem($text, $url = '', array $translationParameters = [], $translate = true)
     {
         return $this->prependNamespaceItem(self::DEFAULT_NAMESPACE, $text, $url, $translationParameters, $translate);
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text      #TranslationKey
+     * @param mixed  $namespace
+     * @param mixed  $url
+     * @param mixed  $translate
      */
-    public function prependNamespaceItem($namespace, $text, $url = "", array $translationParameters = array(), $translate = true)
+    public function prependNamespaceItem($namespace, $text, $url = '', array $translationParameters = [], $translate = true)
     {
         $b = new SingleBreadcrumb($text, $url, $translationParameters, $translate);
         array_unshift($this->breadcrumbs[$namespace], $b);
@@ -56,19 +66,24 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $text #TranslationKey
-     * @param string $route #Route
+     * @param string $text          #TranslationKey
+     * @param string $route         #Route
+     * @param mixed  $referenceType
+     * @param mixed  $translate
      */
-    public function addRouteItem($text, $route, array $parameters = array(), $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = array(), $translate = true)
+    public function addRouteItem($text, $route, array $parameters = [], $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = [], $translate = true)
     {
         return $this->addNamespaceRouteItem(self::DEFAULT_NAMESPACE, $text, $route, $parameters, $referenceType, $translationParameters, $translate);
     }
 
     /**
-     * @param string $text #TranslationKey
-     * @param string $route #Route
+     * @param string $text          #TranslationKey
+     * @param string $route         #Route
+     * @param mixed  $namespace
+     * @param mixed  $referenceType
+     * @param mixed  $translate
      */
-    public function addNamespaceRouteItem($namespace, $text, $route, array $parameters = array(), $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = array(), $translate = true)
+    public function addNamespaceRouteItem($namespace, $text, $route, array $parameters = [], $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = [], $translate = true)
     {
         $url = $this->router->generate($route, $parameters, $referenceType);
 
@@ -76,19 +91,24 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $text #TranslationKey
-     * @param string $route #Route
+     * @param string $text          #TranslationKey
+     * @param string $route         #Route
+     * @param mixed  $referenceType
+     * @param mixed  $translate
      */
-    public function prependRouteItem($text, $route, array $parameters = array(), $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = array(), $translate = true)
+    public function prependRouteItem($text, $route, array $parameters = [], $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = [], $translate = true)
     {
         return $this->prependNamespaceRouteItem(self::DEFAULT_NAMESPACE, $text, $route, $parameters, $referenceType, $translationParameters, $translate);
     }
 
     /**
-     * @param string $text #TranslationKey
-     * @param string $route #Route
+     * @param string $text          #TranslationKey
+     * @param string $route         #Route
+     * @param mixed  $namespace
+     * @param mixed  $referenceType
+     * @param mixed  $translate
      */
-    public function prependNamespaceRouteItem($namespace, $text, $route, array $parameters = array(), $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = array(), $translate = true)
+    public function prependNamespaceRouteItem($namespace, $text, $route, array $parameters = [], $referenceType = RouterInterface::ABSOLUTE_PATH, array $translationParameters = [], $translate = true)
     {
         $url = $this->router->generate($route, $parameters, $referenceType);
 
@@ -96,24 +116,29 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text      #TranslationKey
+     * @param mixed  $url
+     * @param mixed  $translate
      */
-    public function addObjectArray(array $objects, $text, $url = "", array $translationParameters = array(), $translate = true)
+    public function addObjectArray(array $objects, $text, $url = '', array $translationParameters = [], $translate = true)
     {
         return $this->addNamespaceObjectArray(self::DEFAULT_NAMESPACE, $objects, $text, $url, $translationParameters, $translate);
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text      #TranslationKey
+     * @param mixed  $namespace
+     * @param mixed  $url
+     * @param mixed  $translate
      */
-    public function addNamespaceObjectArray($namespace, array $objects, $text, $url = "", array $translationParameters = array(), $translate = true)
+    public function addNamespaceObjectArray($namespace, array $objects, $text, $url = '', array $translationParameters = [], $translate = true)
     {
-        foreach($objects as $object) {
+        foreach ($objects as $object) {
             $itemText = $this->validateArgument($object, $text);
-            if ($url != "") {
+            if ('' != $url) {
                 $itemUrl = $this->validateArgument($object, $url);
             } else {
-                $itemUrl = "";
+                $itemUrl = '';
             }
             $this->addNamespaceItem($namespace, $itemText, $itemUrl, $translationParameters, $translate);
         }
@@ -121,59 +146,72 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
         return $this;
     }
 
-    public function clear($namespace = "")
+    public function clear($namespace = '')
     {
         if (strlen($namespace)) {
-            $this->breadcrumbs[$namespace] = array();
+            $this->breadcrumbs[$namespace] = [];
         } else {
-            $this->breadcrumbs = array(
-                self::DEFAULT_NAMESPACE => array()
-            );
+            $this->breadcrumbs = [
+                self::DEFAULT_NAMESPACE => [],
+            ];
         }
 
         return $this;
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text          #TranslationKey
+     * @param mixed  $object
+     * @param mixed  $url
+     * @param mixed  $parent
+     * @param mixed  $firstPosition
      */
-    public function addObjectTree($object, $text, $url = "", $parent = 'parent', array $translationParameters = array(), $firstPosition = -1)
+    public function addObjectTree($object, $text, $url = '', $parent = 'parent', array $translationParameters = [], $firstPosition = -1)
     {
         return $this->addNamespaceObjectTree(self::DEFAULT_NAMESPACE, $object, $text, $url, $parent, $translationParameters, $firstPosition);
     }
 
     /**
-     * @param string $text #TranslationKey
+     * @param string $text          #TranslationKey
+     * @param mixed  $namespace
+     * @param mixed  $object
+     * @param mixed  $url
+     * @param mixed  $parent
+     * @param mixed  $firstPosition
      */
-    public function addNamespaceObjectTree($namespace, $object, $text, $url = "", $parent = 'parent', array $translationParameters = array(), $firstPosition = -1)
+    public function addNamespaceObjectTree($namespace, $object, $text, $url = '', $parent = 'parent', array $translationParameters = [], $firstPosition = -1)
     {
         $itemText = $this->validateArgument($object, $text);
-        if ($url != "") {
+        if ('' != $url) {
             $itemUrl = $this->validateArgument($object, $url);
         } else {
-            $itemUrl = "";
+            $itemUrl = '';
         }
         $itemParent = $this->validateArgument($object, $parent);
-        if ($firstPosition == -1) {
+        if (-1 == $firstPosition) {
             $firstPosition = sizeof($this->breadcrumbs);
         }
         $b = new SingleBreadcrumb($itemText, $itemUrl, $translationParameters);
-        array_splice($this->breadcrumbs[$namespace], $firstPosition, 0, array($b));
+        array_splice($this->breadcrumbs[$namespace], $firstPosition, 0, [$b]);
         if ($itemParent) {
             $this->addNamespaceObjectTree($namespace, $itemParent, $text, $url, $parent, $translationParameters, $firstPosition);
         }
+
         return $this;
     }
 
     /**
-     * @return \Huluti\BreadcrumbsBundle\Model\SingleBreadcrumb[]
+     * @param mixed $namespace
+     *
+     * @return SingleBreadcrumb[]
      */
     public function getNamespaceBreadcrumbs($namespace = self::DEFAULT_NAMESPACE)
     {
         // Check whether requested namespace breadcrumbs is exists
         if (!$this->hasNamespaceBreadcrumbs($namespace)) {
             throw new \InvalidArgumentException(sprintf(
-                'The breadcrumb namespace "%s" does not exist', $namespace
+                'The breadcrumb namespace "%s" does not exist',
+                $namespace
             ));
         }
 
@@ -196,9 +234,6 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
         return array_keys($this->breadcrumbs);
     }
 
-    /**
-     * @param RouterInterface $router
-     */
     public function setRouter(RouterInterface $router)
     {
         $this->router = $router;
@@ -253,7 +288,7 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
     #[\ReturnTypeWillChange]
     public function offsetGet($offset, $namespace = self::DEFAULT_NAMESPACE)
     {
-        return isset($this->breadcrumbs[$namespace][$offset]) ? $this->breadcrumbs[$namespace][$offset] : null;
+        return $this->breadcrumbs[$namespace][$offset] ?? null;
     }
 
     public function offsetUnset($offset, $namespace = self::DEFAULT_NAMESPACE): void
@@ -272,13 +307,14 @@ class Breadcrumbs implements \Iterator, \ArrayAccess, \Countable
             return $argument($object);
         }
 
-        $getter = 'get' . ucfirst($argument);
+        $getter = 'get'.ucfirst($argument);
         if (method_exists($object, $getter)) {
-            return call_user_func(array(&$object, $getter), $getter);
+            return call_user_func([&$object, $getter], $getter);
         }
 
         throw new \InvalidArgumentException(sprintf(
-            'Neither a valid callback function passed nor a method with the name %s() is exists', $getter
+            'Neither a valid callback function passed nor a method with the name %s() is exists',
+            $getter
         ));
     }
 }

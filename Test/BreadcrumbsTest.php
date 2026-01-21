@@ -1,17 +1,24 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Huluti\BreadcrumbsBundle\Test;
 
+use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
+use Huluti\BreadcrumbsBundle\Model\SingleBreadcrumb;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class BreadcrumbsTest extends TestCase
 {
-
     public function testBreadcrumbs(): void
     {
-        /** @var \Huluti\BreadcrumbsBundle\Model\Breadcrumbs|\Huluti\BreadcrumbsBundle\Model\SingleBreadcrumb[] $breadcrumbs */
+        /** @var Breadcrumbs|SingleBreadcrumb[] $breadcrumbs */
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->addItem('FooBar');
 
@@ -47,5 +54,4 @@ final class BreadcrumbsTest extends TestCase
 
         $breadcrumbs->getNamespaceBreadcrumbs('invalid');
     }
-
 }
