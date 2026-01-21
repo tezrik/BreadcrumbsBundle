@@ -36,7 +36,7 @@ class AppKernel extends Kernel
         $this->addBundle(FrameworkBundle::class);
         $this->addBundle(TwigBundle::class);
         $this->addBundle(HulutiBreadcrumbsBundle::class);
-        $this->addConfigFile(__DIR__.'/config.xml');
+        $this->addConfigFile(__DIR__.'/config.php');
     }
 
     public function addBundle(string $bundleClassName): void
