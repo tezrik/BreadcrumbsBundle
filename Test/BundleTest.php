@@ -14,23 +14,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class BundleTest extends WebTestCase
 {
-    public function testInitBundle()
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        restore_exception_handler();
+    }
+
+    public function testInitBundle(): void
     {
         $client = static::createClient();
-
         $container = $client->getContainer();
 
         // Test if the service exists
         self::assertTrue($container->has('huluti_breadcrumbs.helper'));
-
         $service = $container->get('huluti_breadcrumbs.helper');
         self::assertInstanceOf(BreadcrumbsHelper::class, $service);
     }
 
-    public function testRendering()
+    public function testRendering(): void
     {
         $client = static::createClient();
-
         $container = $client->getContainer();
 
         /** @var Breadcrumbs $service */
@@ -55,10 +58,9 @@ class BundleTest extends WebTestCase
         );
     }
 
-    public function testRenderingTranslationWithParameters()
+    public function testRenderingTranslationWithParameters(): void
     {
         $client = static::createClient();
-
         $container = $client->getContainer();
 
         /** @var Breadcrumbs $service */
@@ -85,10 +87,9 @@ class BundleTest extends WebTestCase
         );
     }
 
-    public function testRenderingTranslationWithParametersAndTranslationDomain()
+    public function testRenderingTranslationWithParametersAndTranslationDomain(): void
     {
         $client = static::createClient();
-
         $container = $client->getContainer();
 
         /** @var Breadcrumbs $service */

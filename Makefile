@@ -12,3 +12,6 @@ analyze:
 
 analyze_ci:
 	./vendor/bin/phpstan analyse --error-format github
+
+test:
+	./vendor/bin/phpunit
