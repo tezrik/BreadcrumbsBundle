@@ -1,4 +1,4 @@
-_This is a fork of [mhujer/BreadcrumbsBundle](https://github.com/mhujer/BreadcrumbsBundle) maintained for newer Symfony versions._
+_This is a fork of [mhujer/BreadcrumbsBundle](https://github.com/mhujer/BreadcrumbsBundle), maintained for newer Symfony versions. The original bundle itself is a fork of [sampart/BreadcrumbsBundle](https://github.com/sampart/BreadcrumbsBundle)._
 
 Requirements
 =======
