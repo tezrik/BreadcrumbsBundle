@@ -2,14 +2,14 @@
 
 namespace Huluti\BreadcrumbsBundle\EventListener;
 
+use Huluti\BreadcrumbsBundle\Attribute\Breadcrumb;
+use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Routing\RouterInterface;
-use Huluti\BreadcrumbsBundle\Attribute\Breadcrumb;
-use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 
 class BreadcrumbListener implements EventSubscriberInterface
 {
@@ -17,10 +17,9 @@ class BreadcrumbListener implements EventSubscriberInterface
     private PropertyAccessor $propertyAccess;
 
     public function __construct(
-        private readonly Breadcrumbs     $breadcrumbs,
+        private readonly Breadcrumbs $breadcrumbs,
         private readonly RouterInterface $router,
-    )
-    {
+    ) {
         $this->propertyAccess = PropertyAccess::createPropertyAccessor();
     }
 
@@ -44,6 +43,7 @@ class BreadcrumbListener implements EventSubscriberInterface
 
             if (empty($text)) {
                 $this->addBreadcrumb($breadcrumbAttribute);
+
                 continue;
             }
 
@@ -52,11 +52,12 @@ class BreadcrumbListener implements EventSubscriberInterface
 
             if (!isset($matches[0])) {
                 $this->addBreadcrumb($breadcrumbAttribute);
+
                 continue;
             }
             foreach ($matches[0] as $match) {
                 $data = $this->extractData($match);
-                if ($data === null) {
+                if (null === $data) {
                     continue;
                 }
 
@@ -87,9 +88,8 @@ class BreadcrumbListener implements EventSubscriberInterface
 
         $object = $this->event->getNamedArguments()[$nameObject];
 
-        return (string)$this->propertyAccess->getValue($object, $propertyPath);
+        return (string) $this->propertyAccess->getValue($object, $propertyPath);
     }
-
 
     private function addBreadcrumb(Breadcrumb $attribute): void
     {

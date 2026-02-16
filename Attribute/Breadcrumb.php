@@ -1,13 +1,11 @@
 <?php
 
-/*
- * (c) Tezrik <yuzhakovgg@gmail.com>
- */
+// (c) Tezrik <yuzhakovgg@gmail.com>
 
 namespace Huluti\BreadcrumbsBundle\Attribute;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Represents a breadcrumb configuration with various parameters for URL generation, translation, and namespace-based grouping.
@@ -18,17 +16,15 @@ use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 class Breadcrumb
 {
     public function __construct(
-        private string  $namespace = Breadcrumbs::DEFAULT_NAMESPACE,
-        private string  $text = '',
+        private string $namespace = Breadcrumbs::DEFAULT_NAMESPACE,
+        private string $text = '',
         private ?string $url = null,
         private ?string $route = null,
-        private array   $parameters = [],
-        private int     $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
-        private array   $translationParameters = array(),
-        private bool    $translate = true
-    )
-    {
-    }
+        private array $parameters = [],
+        private int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
+        private array $translationParameters = [],
+        private bool $translate = true
+    ) {}
 
     public function getNamespace(): string
     {
