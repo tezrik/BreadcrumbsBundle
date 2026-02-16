@@ -36,11 +36,11 @@ return static function (ContainerConfigurator $container): void {
     // BreadcrumbListener
     $services->set('huluti_breadcrumbs.listener', BreadcrumbListener::class)
         ->public()
-        ->tag('kernel.event_subscriber', [
-            'event' => 'kernel.controller_arguments',
-            'method' => 'onKernelController',
-            'priority' => -1,
-        ])
+//        ->tag('kernel.event_subscriber', [
+//            'event' => 'kernel.controller_arguments',
+//            'method' => 'onKernelController',
+//            'priority' => -1,
+//        ])
         ->args(
             [
                 service(Breadcrumbs::class),

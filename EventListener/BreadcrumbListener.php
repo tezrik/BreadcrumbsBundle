@@ -2,14 +2,16 @@
 
 namespace Huluti\BreadcrumbsBundle\EventListener;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Routing\RouterInterface;
 use Huluti\BreadcrumbsBundle\Attribute\Breadcrumb;
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 
-class BreadcrumbListener
+class BreadcrumbListener implements EventSubscriberInterface
 {
     private ControllerArgumentsEvent $event;
     private PropertyAccessor $propertyAccess;
@@ -20,6 +22,13 @@ class BreadcrumbListener
     )
     {
         $this->propertyAccess = PropertyAccess::createPropertyAccessor();
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::CONTROLLER_ARGUMENTS => ['onKernelController', -1],
+        ];
     }
 
     public function onKernelController(ControllerArgumentsEvent $event): void
@@ -97,5 +106,4 @@ class BreadcrumbListener
             $attribute->isTranslate()
         );
     }
-
 }
