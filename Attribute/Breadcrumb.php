@@ -9,6 +9,11 @@ namespace Huluti\BreadcrumbsBundle\Attribute;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 
+/**
+ * Represents a breadcrumb configuration with various parameters for URL generation, translation, and namespace-based grouping.
+ *
+ * This attribute can be applied to classes or methods to define breadcrumb metadata.
+ */
 #[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 class Breadcrumb
 {
