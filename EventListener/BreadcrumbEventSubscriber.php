@@ -10,13 +10,16 @@ use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 
-readonly class BreadcrumbListener implements EventSubscriberInterface
+readonly class BreadcrumbEventSubscriber implements EventSubscriberInterface
 {
+    private BreadcrumbPlaceholderResolver $placeholderResolver;
+
     public function __construct(
         private Breadcrumbs $breadcrumbs,
         private RouterInterface $router,
-        private BreadcrumbPlaceholderResolver $placeholderResolver,
-    ) {}
+    ) {
+        $this->placeholderResolver = new BreadcrumbPlaceholderResolver();
+    }
 
     public static function getSubscribedEvents(): array
     {

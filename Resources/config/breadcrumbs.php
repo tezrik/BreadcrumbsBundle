@@ -2,7 +2,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Huluti\BreadcrumbsBundle\EventListener\BreadcrumbListener;
+use Huluti\BreadcrumbsBundle\EventListener\BreadcrumbEventSubscriber;
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
 use Huluti\BreadcrumbsBundle\Templating\Helper\BreadcrumbsHelper;
 use Huluti\BreadcrumbsBundle\Twig\Extension\BreadcrumbsExtension;
@@ -38,7 +38,8 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // BreadcrumbListener
-    $services->set('huluti_breadcrumbs.listener', BreadcrumbListener::class)
+    $services->set('huluti_breadcrumbs.listener', BreadcrumbEventSubscriber::class)
+        ->tag('kernel.event_subscriber')
         ->public()
         ->args(
             [
