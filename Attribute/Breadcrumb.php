@@ -1,7 +1,5 @@
 <?php
 
-// (c) Tezrik <yuzhakovgg@gmail.com>
-
 namespace Huluti\BreadcrumbsBundle\Attribute;
 
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
@@ -16,14 +14,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class Breadcrumb
 {
     public function __construct(
-        private string $namespace = Breadcrumbs::DEFAULT_NAMESPACE,
+        private readonly string $namespace = Breadcrumbs::DEFAULT_NAMESPACE,
         private string $text = '',
-        private ?string $url = null,
-        private ?string $route = null,
+        private readonly ?string $url = null,
+        private readonly ?string $route = null,
         private array $parameters = [],
-        private int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
-        private array $translationParameters = [],
-        private bool $translate = true
+        private readonly int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
+        private readonly array $translationParameters = [],
+        private readonly bool $translate = true
     ) {}
 
     public function getNamespace(): string

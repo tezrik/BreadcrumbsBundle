@@ -4,24 +4,19 @@ namespace Huluti\BreadcrumbsBundle\EventListener;
 
 use Huluti\BreadcrumbsBundle\Attribute\Breadcrumb;
 use Huluti\BreadcrumbsBundle\Model\Breadcrumbs;
+use Huluti\BreadcrumbsBundle\Service\BreadcrumbPlaceholderResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Routing\RouterInterface;
 
-class BreadcrumbListener implements EventSubscriberInterface
+readonly class BreadcrumbListener implements EventSubscriberInterface
 {
-    private ControllerArgumentsEvent $event;
-    private PropertyAccessor $propertyAccess;
-
     public function __construct(
-        private readonly Breadcrumbs $breadcrumbs,
-        private readonly RouterInterface $router,
-    ) {
-        $this->propertyAccess = PropertyAccess::createPropertyAccessor();
-    }
+        private Breadcrumbs $breadcrumbs,
+        private RouterInterface $router,
+        private BreadcrumbPlaceholderResolver $placeholderResolver,
+    ) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -30,72 +25,60 @@ class BreadcrumbListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Handles the kernel controller event and processes breadcrumb attributes.
+     */
     public function onKernelController(ControllerArgumentsEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
-        $this->event = $event;
+
+        $arguments = $event->getNamedArguments();
 
         /** @var Breadcrumb $breadcrumbAttribute */
         foreach ($event->getAttributes(Breadcrumb::class) as $breadcrumbAttribute) {
-            $text = $breadcrumbAttribute->getText();
-
-            if (empty($text)) {
-                $this->addBreadcrumb($breadcrumbAttribute);
-
-                continue;
-            }
-
-            $pattern = '/\{[^}]+\}/';
-            preg_match_all($pattern, $text, $matches, PREG_SET_ORDER, 0);
-
-            if (!isset($matches[0])) {
-                $this->addBreadcrumb($breadcrumbAttribute);
-
-                continue;
-            }
-            foreach ($matches[0] as $match) {
-                $data = $this->extractData($match);
-                if (null === $data) {
-                    continue;
-                }
-
-                $text = str_replace($match, $data, $text);
-            }
-
-            $parameters = [];
-            foreach ($breadcrumbAttribute->getParameters() as $key => $parameter) {
-                $parameters[$key] = $this->extractData($parameter);
-            }
-            if (!empty($parameters)) {
-                $breadcrumbAttribute->setParameters($parameters);
-            }
-
-            $this->addBreadcrumb($breadcrumbAttribute->setText($text));
+            $this->processBreadcrumbAttribute($breadcrumbAttribute, $arguments);
         }
     }
 
-    private function extractData(string $match): ?string
+    /**
+     * Processes a single breadcrumb attribute.
+     */
+    private function processBreadcrumbAttribute(Breadcrumb $attribute, array $arguments): void
     {
-        $fullPathAttribute = trim($match, '{}');
-        if (empty($fullPathAttribute)) {
-            return null;
+        // Clone attribute to avoid modifying the original
+        $processedAttribute = clone $attribute;
+
+        // Process text placeholders
+        $text = $processedAttribute->getText();
+        if (!empty($text)) {
+            $text = $this->placeholderResolver->resolveText($text, $arguments);
+            $processedAttribute->setText($text);
         }
-        $nameObject = explode('.', $fullPathAttribute)[0];
-        $mb_strlen = mb_strlen($nameObject);
-        $propertyPath = mb_strcut($fullPathAttribute, ++$mb_strlen);
 
-        $object = $this->event->getNamedArguments()[$nameObject];
+        // Process parameters placeholders
+        $parameters = $processedAttribute->getParameters();
+        if (!empty($parameters)) {
+            $resolvedParameters = $this->placeholderResolver->resolveParameters($parameters, $arguments);
+            $processedAttribute->setParameters($resolvedParameters);
+        }
 
-        return (string) $this->propertyAccess->getValue($object, $propertyPath);
+        $this->addBreadcrumb($processedAttribute);
     }
 
+    /**
+     * Adds a breadcrumb to the current namespace.
+     */
     private function addBreadcrumb(Breadcrumb $attribute): void
     {
         $url = $attribute->getUrl();
         if (empty($url) && !empty($attribute->getRoute())) {
-            $url = $this->router->generate($attribute->getRoute(), $attribute->getParameters(), $attribute->getReferenceType());
+            $url = $this->router->generate(
+                $attribute->getRoute(),
+                $attribute->getParameters(),
+                $attribute->getReferenceType()
+            );
         }
 
         $this->breadcrumbs->addNamespaceItem(

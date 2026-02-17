@@ -69,12 +69,12 @@ or with attributes and [PropertyAccess Component](https://symfony.com/doc/curren
 ```php
 use Huluti\BreadcrumbsBundle\Attribute\Breadcrumb;
 
-#[Breadcrumb(text: 'textClassForAllClass', route: 'app_main')]
+#[Breadcrumb(text: 'firstBreadcrumb', route: 'app_main')]
 class Controller extends AbstractController{
     
-    #[Breadcrumb(text: 'textMethod', route: 'app_main')]
-    #[Breadcrumb(text: 'textMethod1', url: '/')]
-    #[Breadcrumb(text: 'textMethod  {user.name} in {category.name}', route: 'app_main', parameters: ['id' => '{user.id}', 'category' => '{category.name}'])]
+    #[Breadcrumb(text: 'nextBreadcrumb', route: 'app_main')]
+    #[Breadcrumb(text: 'nextBreadcrumb', url: '/')]
+    #[Breadcrumb(text: 'nextBreadcrumb  {user.name} in {category.name}', route: 'app_main', parameters: ['id' => '{user.id}', 'category' => '{category.name}'])]
     public function yourAction(User $user, Category $category)
     {
     }
